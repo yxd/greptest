@@ -14,8 +14,14 @@ class Grep (val word: String) {
    * 
    */
   def visit(file: File): List[String]  = {
-    if(file.isDirectory()) {
-      file.listFiles().foldLeft(List[String]()) ( _ ++ visit(_) )
+    if(file == null) {
+      List.empty
+    } else if(file.isDirectory()) {
+      val list = file.listFiles()
+      if(list != null && list.size > 0)
+        file.listFiles().foldLeft(List[String]()) ( _ ++ visit(_) )
+      else
+        List.empty
     } else if(file.isFile() && file.canRead() && grepFile(file)) {
       List(file.getAbsolutePath)
     } else {
