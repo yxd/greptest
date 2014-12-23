@@ -2,9 +2,9 @@ package sgrep
 
 import java.io.File
 
-class Grep (val word: String, val dir: File) {
+class Grep (val word: String) {
   
-  def exec() {
+  def exec(dir: File) {
     println(visit(dir).mkString("\n"));
   }
   
@@ -13,13 +13,13 @@ class Grep (val word: String, val dir: File) {
    * @param file the input file or directory
    * 
    */
-  def visit(file: File): Array[String]  = {
+  def visit(file: File): List[String]  = {
     if(file.isDirectory()) {
-      file.listFiles().foldLeft(Array[String]()) ( _ ++ visit(_) )
+      file.listFiles().foldLeft(List[String]()) ( _ ++ visit(_) )
     } else if(file.isFile() && file.canRead() && grepFile(file)) {
-      Array(file.getAbsolutePath)
+      List(file.getAbsolutePath)
     } else {
-      Array()
+      List.empty
     } 
   }
   

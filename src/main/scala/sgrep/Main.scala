@@ -16,8 +16,8 @@ object Main {
       System.exit(-2)
     }
     
-    val grep = new Grep(args(0), dir)
-    grep.exec
+    val grep = new Grep(args(0))
+    grep.exec(dir)
     
   }
 }
