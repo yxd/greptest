@@ -5,7 +5,7 @@ import java.io.File
 class Grep (val word: String, val dir: File) {
   
   def exec() {
-    visit(dir);
+    println(visit(dir).mkString("\n"));
   }
   
   /**
@@ -13,13 +13,13 @@ class Grep (val word: String, val dir: File) {
    * @param file the input file or directory
    * 
    */
-  private def visit(file: File): Unit = {
+  def visit(file: File): Array[String]  = {
     if(file.isDirectory()) {
-      file.listFiles().foreach { visit(_) }
-    } else if(file.isFile() && file.canRead()) {
-      if(grepFile(file)) {
-        output(file)
-      }
+      file.listFiles().foldLeft(Array[String]()) ( _ ++ visit(_) )
+    } else if(file.isFile() && file.canRead() && grepFile(file)) {
+      Array(file.getAbsolutePath)
+    } else {
+      Array()
     } 
   }
   
@@ -28,7 +28,7 @@ class Grep (val word: String, val dir: File) {
    * @param file the input file
    * @return true if the file contains the word, false otherwise
    */
-  private def grepFile(file: File): Boolean = {
+  def grepFile(file: File): Boolean = {
     try {
       scala.io.Source.fromFile(file)
         .getLines
@@ -39,9 +39,4 @@ class Grep (val word: String, val dir: File) {
     }
   }
 
-    
-  private def output(file: File): Unit = {
-    println(file.getAbsolutePath)
-  }
-  
 }
